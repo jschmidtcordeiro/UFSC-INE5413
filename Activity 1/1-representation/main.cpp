@@ -5,5 +5,4 @@ int main() {
     Graph graph;
     graph.readFile("input");
 
-    
 }

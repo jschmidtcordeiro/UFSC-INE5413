@@ -100,6 +100,8 @@ public:
                 if (a != b) {   // If the node has a line to himselft
                     nodesVector[b - 1].addLine(nodesVector[a - 1], weight);
                 }
+
+                lines++;
             }
 
         }
