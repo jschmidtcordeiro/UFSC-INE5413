@@ -1,7 +1,7 @@
 #include <iostream>
 #include "File.h"
 #include "Graph.h"
-#include "BreadthFirstSearch.h"
+#include "FloydWarshall.h"
 
 class System {
 public:
@@ -33,9 +33,9 @@ public:
         return graph;
     }
 
-    void search(int startVertex) {
-        BreadthFirstSearch bfs;
-        bfs.search(graph, startVertex);
+    void search() {
+        FloydWarshall fw;
+        fw.search(graph);
     }
 
 private:
