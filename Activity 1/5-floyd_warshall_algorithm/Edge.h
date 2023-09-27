@@ -1,3 +1,6 @@
+#ifndef EDGE_H
+#define EDGE_H
+
 #include "Node.h"
 
 class Edge {
@@ -10,12 +13,24 @@ public:
         return source;
     }
 
+    Node* getSource() const {
+        return source;
+    }
+
     Node* getDestination() {
         return destination;
     }
 
+    Node* getDestination() const {
+      return destination;
+    }
+
     int getValue() {
         return value;
+    }
+
+    int getValue() const {
+      return value;
     }
 
 private:
@@ -23,3 +38,6 @@ private:
     Node* destination;
     int value;
 };
+
+
+#endif // EDGE_H

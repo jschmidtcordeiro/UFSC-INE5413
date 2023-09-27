@@ -67,6 +67,15 @@ public:
         return neighbors;
     }
 
+    bool hasEdge(int node_value) const {
+        for (Node* n : neighbors) {
+            if (n->getValue() == node_value) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 private:
     std::string name;
     int value;

@@ -21,7 +21,7 @@ public:
      * @param name The name of the node.
      * @param value The value associated with the node.
      */
-    Node(const std::string& name, int value) {
+    Node(std::string name, int value) {
         this->name = name;
         this->value = value;
     }
@@ -29,7 +29,7 @@ public:
     ~Node() {}
 
     // Getter for name
-    const std::string& getName() const {
+    std::string getName() const {
         return name;
     }
 
@@ -38,21 +38,24 @@ public:
         return value;
     }
 
-    void addLine(Node& node, int weight) {
-        // this->edges[node.getValue()] = std::make_pair(node, weight);
-        this->edges.insert({node.getValue(), std::make_pair(node, weight)});
+    void addNeighbor(Node* n) {
+        neighbors.push_back(n);
     }
 
-    const std::unordered_map<int, std::pair<Node, int>>& getEdges() const {
-        return edges;
+    void setVisited(bool visited) {
+        this->visited = visited;
     }
 
-    bool hasEdge(int node_value) const {
-        return edges.count(node_value) != 0;
+    bool isVisited() {
+        return visited;
     }
 
-    const std::pair<Node, int>& getEdge(int node_value) const {
-        return edges.at(node_value);
+    void setDepth(int depth) {
+        this->depth = depth;
+    }
+
+    int getDepth() {
+        return depth;
     }
 
     /**
@@ -60,20 +63,25 @@ public:
      *
      * @return a vector of nodes
      */
-    std::vector<Node> getNeighbors() {
-        std::vector<Node> neighbors;
-
-        for (auto&[_, edge] : edges) {
-            neighbors.push_back(edge.first);
-        }
-
+    std::vector<Node*> getNeighbors() {
         return neighbors;
+    }
+
+    bool hasEdge(int node_value) const {
+        for (Node* n : neighbors) {
+            if (n->getValue() == node_value) {
+                return true;
+            }
+        }
+        return false;
     }
 
 private:
     std::string name;
     int value;
-    std::unordered_map<int, std::pair<Node, int>> edges;
+    bool visited;
+    int depth;
+    std::vector<Node*> neighbors;
 };
 
 #endif // NODE_H

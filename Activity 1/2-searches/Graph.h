@@ -78,23 +78,20 @@ public:
     }
  
     bool hasEdge (Node* u, Node* v) {
-        for(Edge* e : edges_vector) {
-            if(e->getSource() == u && e->getDestination() == v) {
-                return true;
-            }
-            if(e->getSource() == v && e->getDestination() == u) {
-                return true;
-            }
+        if(u->hasEdge(v->getValue()) || v->hasEdge(u->getValue())) {
+            return true;
         }
         return false;
     }
 
-    int valueOfEdge(Node* u, Node* v) {
+    int getValueOfEdge(Node* u, Node* v) {
         for(Edge* e : edges_vector) {
-            if(e->getSource() == u && e->getDestination() == v) {
+            if((e->getSource() == u && e->getDestination() == v) || 
+               (e->getSource() == v && e->getDestination() == u)) {
                 return e->getValue();
             }
         }
+        return -1;
     }
 
 private:

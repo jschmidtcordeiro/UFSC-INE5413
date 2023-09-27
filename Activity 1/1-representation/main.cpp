@@ -1,8 +1,7 @@
-#include <iostream>
-#include "Graph.h"
+#include "System.h"
 
 int main() {
-    Graph graph;
-    graph.readFile("input");
-
+    System sys("input");
+    sys.run();
+    Graph* graph = sys.getGraph();
 }
