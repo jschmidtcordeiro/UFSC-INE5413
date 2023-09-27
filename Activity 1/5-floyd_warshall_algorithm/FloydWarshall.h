@@ -32,7 +32,10 @@ public:
         for(int u = 0; u < g->numberOfNodes(); u++) {
             std::cout << u + 1 << ":";
             for(int v = 0; v < g->numberOfNodes(); v++) {
-                std::cout << adjacency_matrixes[g->numberOfNodes()][u][v] << ",";
+                std::cout << adjacency_matrixes[g->numberOfNodes()][u][v];
+                if(g->numberOfNodes() - 1 != v) {
+                    std::cout << ",";
+                }
             }
             std::cout << std::endl;
         }
