@@ -42,6 +42,7 @@ public:
             }
 
             std::stringstream line_stream(line);
+            // std::cout << line << std::endl;
             if (readingNodes) {
                 int nodeIndex;
                 std::string label;

@@ -50,12 +50,12 @@ public:
         return nodes_vector[i - 1];
     }
 
-    std::vector<Edge*> getNeighbors(Node* n) {
+    std::vector<Node*> getNeighbors(Node* n) {
         return n->getNeighbors();
     }
 
-    const std::vector<Node*>& getNodes() const {
-      return nodes_vector;
+    std::vector<Node*> getNodes() {
+        return nodes_vector;
     }
 
     // --------------------------//
@@ -66,15 +66,15 @@ public:
         Node* a = getNode(i_node_a);
         Node* b = getNode(i_node_b);
         
-        // O grafo é não-dirigido, então adicionamos duas 
-        // arestas
-        Edge* edge_a_b = new Edge(a, b, value);
-        edges_vector.push_back(edge_a_b);
-        Edge* edge_b_a = new Edge(b, a, value);
-        edges_vector.push_back(edge_b_a);
+        Edge* new_edge_a = new Edge(a, b, value);
+        edges_vector.push_back(new_edge_a);
+        Edge* new_edge_b = new Edge(b, a, value);
+        edges_vector.push_back(new_edge_b);
     
-        a->addNeighbor(edge_a_b);
-        b->addNeighbor(edge_b_a);
+        a->addNeighbor(b);
+        a->addEdge(new_edge_a);
+        b->addNeighbor(a);
+        b->addEdge(new_edge_b);
     }
 
     int numberOfEdges() const {
@@ -82,30 +82,20 @@ public:
     }
  
     bool hasEdge (Node* u, Node* v) {
-      for (auto edge : u->getNeighbors()) {
-        if (edge->getDestination()->getName() == v->getName()) {
-          return true;
+        if(u->hasEdge(v->getValue()) || v->hasEdge(u->getValue())) {
+            return true;
         }
-      }
-
-      // Grafo é não-dirigido, logo (u,v) == (v,u)
-      for (auto edge : v->getNeighbors()) {
-        if (edge->getDestination()->getName() == u->getName()) {
-          return true;
-        }
-      }
-
-      return false;
+        return false;
     }
 
-    int valueOfEdge(Node* u, Node* v) {
-      for (auto edge : u->getNeighbors()) {
-        if (edge->getDestination()->getName() == v->getName()) {
-          return edge->getValue();
+    int getValueOfEdge(Node* u, Node* v) {
+        for(Edge* e : edges_vector) {
+            if((e->getSource() == u && e->getDestination() == v) || 
+               (e->getSource() == v && e->getDestination() == u)) {
+                return e->getValue();
+            }
         }
-      }
-
-      return 2e9; //edge não existe, então retornamos infinito
+        return -1;
     }
 
 private:

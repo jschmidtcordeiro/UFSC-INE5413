@@ -53,7 +53,7 @@ std::pair<std::vector<int>, std::vector<Node*>> dijkstra(Graph *graph, int src) 
 
     st.erase(st.begin());
 
-    for (auto& edge : u_ptr->getNeighbors()) {
+    for (auto& edge : u_ptr->getEdges()) {
       auto v_ptr = edge->getDestination();
       int w = edge->getValue();
       int v = v_ptr->getValue();
@@ -92,6 +92,11 @@ int main(int argc, char **argv) {
   System sys("input");
   sys.run();
   Graph* graph = sys.getGraph();
+
+  if (src > graph->numberOfNodes()) {
+    std::cout << "O índice deve ser um número menor que a quantidade de vértices no grafo\n";
+    return -3;
+  }
 
   auto[distance, ancestors] = dijkstra(graph, src);
 

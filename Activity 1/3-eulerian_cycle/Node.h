@@ -8,6 +8,7 @@
 #include <string>
 #include <utility>
 
+
 class Edge;
 
 /**
@@ -41,8 +42,29 @@ public:
         return value;
     }
 
-    void addNeighbor(Edge* n) {
+    void addNeighbor(Node* n) {
         neighbors.push_back(n);
+    }
+
+    void addEdge(Edge* e) {
+        edges.push_back(e);
+    }
+
+
+    void setVisited(bool visited) {
+        this->visited = visited;
+    }
+
+    bool isVisited() {
+        return visited;
+    }
+
+    void setDepth(int depth) {
+        this->depth = depth;
+    }
+
+    int getDepth() {
+        return depth;
     }
 
     /**
@@ -50,36 +72,30 @@ public:
      *
      * @return a vector of nodes
      */
-    std::vector<Edge*>& getNeighbors() {
+    std::vector<Node*> getNeighbors() {
         return neighbors;
     }
 
-    // const std::unordered_map<int, std::pair<Node, int>>& getEdges() const {
-    //     return edges;
-    // }
+    std::vector<Edge*> getEdges() {
+        return edges;
+    }
 
-    // bool hasEdge(int node_value) const {
-    //     return edges.count(node_value) != 0;
-    // }
-
-    // /**
-    //  * @brief Get an edge
-    //  *
-    //  * @param node_value The value of an edge
-    //  * 
-    //  * @return A reference to a pair that inform the node and the 
-    //  * value of the line that connects to these two nodes
-    //  */
-    // const std::pair<Node, int>& getEdge(int node_value) const {
-    //     return edges.at(node_value);
-    // }
-
-
+    bool hasEdge(int node_value) const {
+        for (Node* n : neighbors) {
+            if (n->getValue() == node_value) {
+                return true;
+            }
+        }
+        return false;
+    }
 
 private:
     std::string name;
     int value;
-    std::vector<Edge*> neighbors;
+    bool visited;
+    int depth;
+    std::vector<Node*> neighbors;
+    std::vector<Edge*> edges;
 };
 
 #endif // NODE_H

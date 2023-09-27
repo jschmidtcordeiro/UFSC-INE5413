@@ -29,7 +29,7 @@ std::vector<bool> bfs(Graph *graph) {
     queue.pop();
 
     visited[node->getValue()] = true;
-    for (auto edge : node->getNeighbors()) {
+    for (auto edge : node->getEdges()) {
       auto neighboor = edge->getDestination();
       if (visited[neighboor->getValue()]) continue;
 
@@ -43,7 +43,7 @@ std::vector<bool> bfs(Graph *graph) {
 bool is_eulerian(Graph *graph) {
   // Se houver algum nó com grau ímpar, o grafo não é  euleriano
   for (auto& node : graph->getNodes())
-    if (node->getNeighbors().size() % 2 != 0)
+    if (node->getEdges().size() % 2 != 0)
       return false;
 
   auto visited = bfs(graph);
@@ -70,7 +70,7 @@ std::pair<bool, std::vector<Node*>> find_euler_circuit(Graph *graph) {
   while (!trail.empty()) {
     auto node = trail.top();
     int node_value = node->getValue();
-    auto node_neighboors = node->getNeighbors();
+    auto node_neighboors = node->getEdges();
 
     if (num_of_neighboors_visited[node_value] == node_neighboors.size()) {
       path.push_back(node);
