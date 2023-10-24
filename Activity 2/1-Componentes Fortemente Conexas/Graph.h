@@ -15,6 +15,7 @@ class Graph {
 
 public:
     Graph(int V);
+    ~Graph() { delete adj; }
     void addEdge(int v, int w);
     Graph getTranspose();
     void printSCCs();
