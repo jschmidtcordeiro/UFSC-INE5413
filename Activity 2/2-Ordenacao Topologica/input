@@ -1,0 +1,18 @@
+*vertices 8
+1 rotulo_de_1
+2 rotulo_de_2
+3 rotulo_de_3
+4 rotulo_de_4
+5 rotulo_de_5
+6 rotulo_de_6
+7 rotulo_de_7
+8 rotulo_de_8
+*edges
+4 2 10
+2 3 10
+2 7 10
+1 7 10
+2 1 10
+2 5 10
+8 4 10
+7 6 10
