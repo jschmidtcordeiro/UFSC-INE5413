@@ -2,7 +2,6 @@
 #include <list>
 #include <stack>
 #include <algorithm>
-#include <vector>
 #include <unordered_map>
 
 using namespace std;
@@ -12,14 +11,13 @@ class Graph {
     list<int> *adj;
     unordered_map <int, string> nodes;
 
-    void DFS(int v, bool visited[], vector<int> &scc);
+    void DFS(int v, bool visited[]);
     void fillOrder(int v, bool visited[], stack<int> &Stack);
 
 public:
     Graph(int V);
     void addEdge(int v, int w);
     void addNode(int id, string label);
-    // Graph getTranspose();
     void printTopologicalOrder();
 };
 
@@ -36,24 +34,13 @@ void Graph::addNode(int id, string label) {
     nodes.insert({id, label});
 }
 
-void Graph::DFS(int v, bool visited[], vector<int> &scc) {
+void Graph::DFS(int v, bool visited[]) {
     visited[v] = true;
-    scc.push_back(v + 1); // Push the vertex (add 1 for 1-based indexing)
 
     for (auto i = adj[v].begin(); i != adj[v].end(); ++i)
         if (!visited[*i])
-            DFS(*i, visited, scc);
+            DFS(*i, visited);
 }
-
-// Graph Graph::getTranspose() {
-//     Graph g(V);
-//     for (int v = 0; v < V; v++) {
-//         for (auto i = adj[v].begin(); i != adj[v].end(); ++i) {
-//             g.adj[*i].push_back(v);
-//         }
-//     }
-//     return g;
-// }
 
 void Graph::fillOrder(int v, bool visited[], stack<int> &Stack) {
     visited[v] = true;
@@ -79,7 +66,10 @@ void Graph::printTopologicalOrder() {
     }
 
     while (!Stack.empty()) {
-        cout << nodes[Stack.top() + 1] << " → "; // Print the vertex (add 1 for 1-based indexing)
+        if (Stack.size() == 1)
+            cout << nodes[Stack.top() + 1]; // Print the vertex (add 1 for 1-based indexing)
+        else if (Stack.size() > 1)
+            cout << nodes[Stack.top() + 1] << " → "; // Print the vertex (add 1 for 1-based indexing)
         Stack.pop();
     }
     cout << endl;
