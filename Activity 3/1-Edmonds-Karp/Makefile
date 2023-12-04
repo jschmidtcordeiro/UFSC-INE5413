@@ -1,10 +1,10 @@
 all: build run clean
 
 build:
-	g++ main.cpp -o main
+	g++ main.cpp -o main  
 
 run:
-	./main
+	./main fluxo.net
 
 .PHONY: clean
 clean:

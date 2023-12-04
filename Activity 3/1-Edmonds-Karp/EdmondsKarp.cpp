@@ -1,69 +1,87 @@
-#include "EdmondsKarp.h"  // Inclui o arquivo de cabeçalho
-#include <queue>          // Biblioteca para utilizar fila
-#include <climits>        // Biblioteca para utilizar o valor INT_MAX
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <climits>
 
-// Construtor da classe, inicializa o número de vértices do grafo
-EdmondsKarp::EdmondsKarp(int numV) : numVertices(numV) {}
+class EdmondsKarp {
+    int V; // Número de vértices
+    std::vector<std::vector<int>> graph; // Matriz de adjacência para representar o grafo
 
-// Método privado para realizar a busca em largura (BFS)
-bool EdmondsKarp::bfs(std::vector<std::vector<int>>& residualGraph, int origem, int destino, std::vector<int>& parent) {
-    std::vector<bool> visitado(numVertices, false);  // Vetor de booleanos para controlar se um vértice foi visitado
-    std::queue<int> fila;                            // Fila para armazenar os vértices a serem visitados
-    fila.push(origem);                               // Adiciona o vértice de origem à fila
-    visitado[origem] = true;                         // Marca o vértice de origem como visitado
-    parent[origem] = -1;                             // O vértice de origem não possui um pai
+public:
+    EdmondsKarp(int vertices); // Construtor da classe
+    void addEdge(int u, int v, int capacity); // Adiciona uma aresta ao grafo
+    bool bfs(int s, int t, std::vector<int>& parent); // Busca em largura para encontrar caminho de aumento
+    int maxFlow(int source, int sink); // Encontra o fluxo máximo do grafo
+};
 
-    // Enquanto a fila não estiver vazia, continua a busca
-    while (!fila.empty()) {
-        int u = fila.front();  // Obtém o vértice da frente da fila
-        fila.pop();             // Remove o vértice da frente da fila
+// Construtor da classe EdmondsKarp
+EdmondsKarp::EdmondsKarp(int vertices) : V(vertices) {
+    // Inicializa a matriz de adjacência com capacidades de fluxo zeradas
+    graph.resize(V, std::vector<int>(V, 0));
+}
 
-        // Percorre os vértices adjacentes ao vértice atual
-        for (int v = 0; v < numVertices; ++v) {
-            // Verifica se o vértice ainda não foi visitado e se há capacidade residual na aresta
-            if (!visitado[v] && residualGraph[u][v] > 0) {
-                fila.push(v);       // Adiciona o vértice à fila
-                parent[v] = u;      // Define o vértice atual como pai do vértice v
-                visitado[v] = true; // Marca o vértice como visitado
+// Método para adicionar uma aresta ao grafo com capacidade de fluxo
+void EdmondsKarp::addEdge(int u, int v, int capacity) {
+    graph[u][v] = capacity; // Define a capacidade de fluxo da aresta
+}
+
+// Busca em largura para encontrar um caminho de aumento
+bool EdmondsKarp::bfs(int s, int t, std::vector<int>& parent) {
+    std::vector<bool> visited(V, false); // Vetor para marcar vértices visitados na BFS
+    std::queue<int> q; // Fila para a BFS
+
+    q.push(s); // Adiciona o vértice de origem à fila
+    visited[s] = true; // Marca o vértice de origem como visitado
+    parent[s] = -1; // Define o pai do vértice de origem como -1
+
+    // Executa a busca em largura
+    while (!q.empty()) {
+        int u = q.front(); // Obtém o vértice da frente da fila
+        q.pop(); // Remove o vértice da fila
+
+        // Itera sobre os vértices adjacentes ao vértice atual
+        for (int v = 0; v < V; ++v) {
+            // Se o vértice não foi visitado e há capacidade de fluxo na aresta
+            if (!visited[v] && graph[u][v] > 0) {
+                q.push(v); // Adiciona o vértice à fila
+                visited[v] = true; // Marca o vértice como visitado
+                parent[v] = u; // Define o pai do vértice como o vértice atual
             }
         }
     }
 
-    return visitado[destino];  // Retorna se o destino foi alcançado
+    // Retorna verdadeiro se o vértice de destino foi visitado
+    return visited[t];
 }
 
-// Método privado para encontrar o caminho mínimo e calcular o fluxo máximo
-int EdmondsKarp::minimoCaminho(std::vector<std::vector<int>>& graph, int origem, int destino) {
-    std::vector<int> parent(numVertices, -1);      // Vetor para armazenar os pais dos vértices no caminho
-    std::vector<std::vector<int>> residualGraph = graph;  // Grafo residual a ser modificado
+// Encontra o fluxo máximo do grafo usando o algoritmo de Edmonds-Karp
+int EdmondsKarp::maxFlow(int source, int sink) {
+    int u, v;
+    std::vector<int> parent(V, -1); // Vetor para armazenar o caminho de aumento
+    int max_flow = 0; // Inicializa o fluxo máximo como zero
 
-    int fluxoMaximo = 0;  // Inicializa o fluxo máximo como 0
+    // Enquanto existir um caminho de aumento, atualiza o fluxo máximo
+    while (bfs(source, sink, parent)) {
+        int path_flow = INT_MAX; // Inicializa o fluxo do caminho como infinito
 
-    // Enquanto houver caminho aumentante
-    while (bfs(residualGraph, origem, destino, parent)) {
-        int fluxoCaminho = INT_MAX;  // Inicializa o fluxo do caminho como o maior inteiro possível
-
-        // Encontra o fluxo mínimo ao longo do caminho encontrado pela BFS
-        for (int v = destino; v != origem; v = parent[v]) {
-            int u = parent[v];
-            fluxoCaminho = std::min(fluxoCaminho, residualGraph[u][v]);
+        // Encontra a capacidade mínima ao longo do caminho
+        for (v = sink; v != source; v = parent[v]) {
+            u = parent[v];
+            path_flow = std::min(path_flow, graph[u][v]);
         }
 
-        // Atualiza as capacidades residuais das arestas ao longo do caminho
-        for (int v = destino; v != origem; v = parent[v]) {
-            int u = parent[v];
-            residualGraph[u][v] -= fluxoCaminho;
-            residualGraph[v][u] += fluxoCaminho;
+        // Atualiza as capacidades residuais das arestas e capacidades de fluxo
+        for (v = sink; v != source; v = parent[v]) {
+            u = parent[v];
+            graph[u][v] -= path_flow;
+            graph[v][u] += path_flow;
         }
 
-        fluxoMaximo += fluxoCaminho;  // Adiciona o fluxo do caminho ao fluxo máximo
+        // Adiciona o fluxo do caminho ao fluxo máximo
+        max_flow += path_flow;
     }
 
-    return fluxoMaximo;  // Retorna o fluxo máximo encontrado
-}
-
-// Método público para calcular o fluxo máximo do grafo
-int EdmondsKarp::calcularFluxoMaximo(std::vector<std::vector<int>>& graph, int origem, int destino) {
-    return minimoCaminho(graph, origem, destino);  // Chama o método privado para calcular o fluxo máximo
+    // Retorna o fluxo máximo do grafo
+    return max_flow;
 }
 
