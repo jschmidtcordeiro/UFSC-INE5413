@@ -4,7 +4,7 @@ build:
 	g++ main.cpp -o main
 
 run:
-	./main
+	./main $(ARGS)
 
 .PHONY: clean
 clean:
