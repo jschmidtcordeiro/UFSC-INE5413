@@ -1,11 +1,15 @@
-all: build run clean
+CXX = g++
+CXXFLAGS = -std=c++11 -Wall
 
-build:
-	g++ main.cpp -o main  
+SRCS = main.cpp EdmondsKarp.cpp
+OBJS = $(SRCS:.cpp=.o)
+TARGET = main
 
-run:
-	./main fluxo.net
+$(TARGET): $(OBJS)
+	$(CXX) $(CXXFLAGS) $(OBJS) -o $(TARGET)
 
-.PHONY: clean
+%.o: %.cpp
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
 clean:
-	rm main
+	rm -f $(OBJS) $(TARGET)
