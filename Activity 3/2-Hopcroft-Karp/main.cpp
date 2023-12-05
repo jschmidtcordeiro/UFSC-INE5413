@@ -33,20 +33,16 @@ int main() {
     /// Reading the vertices
     for (int i = 0; i < V; i++) {
         std::getline(fin, line);
-        std::stringstream line_stream(line);
-        int v, w;        
-        line_stream >> v >> w;
     }
 
     // Read the number of edges 
     /// Reading edges header
     std::getline(fin, line);
     line_stream = std::stringstream(line);
-    line_stream >> label;
     /// Reading the edges
+    int v, w, weight;
     while (std::getline(fin, line)) {
         std::stringstream line_stream(line);
-        int v, w, weight;
         line_stream >> v >> w >> weight;
 
         g.addEdge(v, w);    // Add the edge to the graph

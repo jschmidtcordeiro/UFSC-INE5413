@@ -18,7 +18,6 @@ class Graph {
 public:
     Graph(int V);
     void addEdge(int v, int w);
-    Graph getTranspose();
     void printHKMatching();
     bool BFS(int matchR[], int dist[]);
     void setV(int V) { this->V = V; }
@@ -112,9 +111,3 @@ void Graph::printHKMatching() {
 
     cout << endl;    
 }
-
-
-
-
-
-
